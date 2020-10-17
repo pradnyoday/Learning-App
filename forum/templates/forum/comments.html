@@ -1,18 +1,50 @@
 {% extends 'forum/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-	{% for post in posts %}
-		<article class="media content-section">
-		  <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
-		  <div class="media-body">
-		    <div class="article-metadata">
-		      <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
-		      <small class="text-muted">{{ post.date | date:"F d, Y" }}</small>
-		    </div>
-		    <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-		    <p class="article-content">{{ post.content }}</p>
-		  </div>
-		</article>
+<style>
+	.fa {
+  font-size: 30px;
+  cursor: pointer;
+  user-select: none;
+}
+.center {
+        margin: auto;
+        width: 80%;
+        padding: 10px;
+    }
+.fa:hover {
+  color: #f24033;
+}
+
+.liked{color: #f24033;}
+</style>
+    {% for post in posts %}
+    <div class="post-content">
+		<div class="post-text">
+			<h2 style="text-align: center;"><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+		</div>
+		{% if post.filetype == 'image' %}
+			<div>
+				<embed src="{{post.files.url}}" type="image/jpg" class="center img-responsive post-image"  width="600px" height="500px"></embed>
+			</div>
+		{% endif %}
+		<div class="post-container">
+			<img src="{{ post.author.profile.image.url }}" alt="user" class="profile-photo-md pull-left"/>
+			<div class="post-detail">
+				<div class="user-info">
+					<h5><a href="{% url 'user-posts' post.author.username %}" class="profile-link">{{ post.author }}</a></h5>
+					<p class="text-muted">{{ post.date | date:"F d, Y" }}</p>
+				</div>
+				
+				<div class="line-divider"></div>
+				
+				<div class="post-text">
+					<p>{{ post.content }}</p>
+				</div>
+                <div class="line-divider"></div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
     {% if nocomments %}
         <h6>No comments yet!</h6>
@@ -20,17 +52,21 @@
         <legend class="border-bottom mb-4">Comments</legend>
         <div class="content-section">
             {% for reply in replies %}
-                <article class="media">
-                <img class="rounded-circle article-img" src="{{ reply.author.profile.image.url }}">
-                <div class="media-body">
-                    <div class="article-metadata">
-                    <a class="mr-2" href="{% url 'user-posts' reply.author.username %}">{{ reply.author.username }}</a>
-                    <small class="text-muted">{{ reply.date | date:"F d, Y" }}</small>
+                <div class="post-container">
+                    <img src="{{ reply.author.profile.image.url }}" alt="user" class="profile-photo-md pull-left"/>
+                    <div class="post-detail">
+                        <article>
+                            <div class="media-body">
+                                <div class="article-metadata" style="margin-left:15px;font-size: 15px;">
+                                <a class="mr-2" href="{% url 'user-posts' reply.author.username %}"  >{{ reply.author.username }}</a>
+                                <small class="text-muted">{{ reply.date | date:"F d, Y" }}</small>
+                                </div>
+                                <p class="article-content"  style="margin-left:15px;font-size: 15px;">{{ reply.content }}</p>
+                            </div>
+                            </article>
+                        <div class="line-divider"></div>
                     </div>
-                    <p class="article-content">{{ reply.content }}</p>
                 </div>
-                </article>
-                <legend class="border-bottom mb-4"></legend>
             {% endfor %}
             
         </div>
@@ -48,5 +84,6 @@
             </div>
         </form>
     {% endfor %}
+		<!--  -->
 	
 {% endblock content %}

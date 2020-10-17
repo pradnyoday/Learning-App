@@ -1,0 +1,7 @@
+users/__pycache__/
+users/migrations/__pycache__/
+LearningApp/__pycache__/
+forum/__pycache__/
+forum/migrations/__pycache__/
+resources/__pycache__/
+resources/migrations/__pycache__/
