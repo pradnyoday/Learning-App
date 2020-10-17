@@ -1,0 +1,32 @@
+{% extends 'forum/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+    .asteriskField {
+        display: none;
+    }
+    .center {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+    }
+</style>
+	<div class="content-section">
+		<form method="POST">
+			{% csrf_token %}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4">Register Now!</legend>
+				{{form|crispy}}
+			</fieldset>
+			<div class="form-group">
+				<button class="btn btn-outline-info" type="submit">Sign Up</button>
+			</div>
+
+			<div class="border-top pt-3">
+				<small class="text-muted">
+					Already have an account? <a class="ml-2" href="{% url 'forum' %}">Sign In</a>
+				</small>
+			</div>
+		</form>
+	</div>
+{% endblock content %}

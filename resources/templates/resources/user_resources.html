@@ -1,0 +1,40 @@
+{% extends 'forum/base.html' %}
+{% block content %}
+
+<h1 class="mb-3">Resources uploaded by {{view.kwargs.username}}</h1>
+	{% for post in resources %}
+		<article class="media content-section">
+		  <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+		  <div class="media-body">
+		    <div class="article-metadata">
+              <a class="mr-2" href="{% url 'user-resources' post.author.username %}">{{ post.author }}</a>
+		      <small class="text-muted">{{ post.date | date:"F d, Y" }}</small>
+		    </div>
+            <h2><a class="article-title" href="{% url 'resource-detail' post.id %}">{{ post.title }}</a></h2>
+			<p class="article-content">{{ post.content }}</p>
+			{% if post.filetype == 'image' %}
+			<div>
+				<embed src="{{post.files.url}}" type="image/jpg" style="width: 100%;height: 100%;border: none;"></embed>
+			</div>
+			{% endif %}
+		  </div>
+		  
+		</article>
+	{% endfor %}
+<!-- 
+	{% for post in posts %}
+		<article class="media content-section">
+		  <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		      <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+		      <small class="text-muted">{{ post.date | date:"F d, Y" }}</small>
+		    </div>
+		    <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+		    <p class="article-content">{{ post.content }}</p>
+		  </div>
+		</article>
+	{% endfor %}
+ -->
+
+{% endblock content %}

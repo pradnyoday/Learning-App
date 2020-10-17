@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'crispy_forms',
+    
+    'forum',
+    'users',
+    'resources',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +81,14 @@ WSGI_APPLICATION = 'LearningApp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'learning_app',
+        'HOST': 'localhost',
+        'USER' : 'root',
+        'PASSWORD' : '',
+        'PORT' : '3306',
+        'STORAGE_ENGINE': 'MyISAM / INNODB / ETC',
+        'OPTIONS': {"init_command": "SET foreign_key_checks = 0;",},
     }
 }
 
@@ -118,3 +130,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_PATH = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'static'))
+STATICFILES_DIRS = (STATIC_PATH,)
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
+
+
+LOGIN_REDIRECT_URL = '/forum'
+LOGIN_URL='/login'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
