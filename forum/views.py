@@ -51,10 +51,22 @@ class PostListView(ListView,ModelFormMixin):
 		self.object = None
 		self.form = self.form_class(request.POST, request.FILES)
 		if self.form.is_valid():
-			a = self.form.cleaned_data.get('files1')
+			filename = self.form.cleaned_data.get('files1')
 			self.form.instance.author = self.request.user
-			self.object = self.form.save()
-			self.object.files = a
+			link = self.form.cleaned_data.get('video_link')
+			if(link == ''):link = 'None'
+			classes = self.form.cleaned_data.get('classes')
+			subject = self.form.cleaned_data.get('subject')
+			ls_link = link.split('=')
+			print(ls_link,ls_link[-1])
+			self.object = self.form.save(commit=False)
+			self.object.files = filename
+			self.object.classes = classes
+			self.object.subject = subject
+			if(link == 'None'):
+				self.object.video_link = 'None'
+			else:
+				self.object.video_link = 'https://www.youtube.com/embed/'+ls_link[-1]
 			self.object.save()
 			# Here ou may consider creating a new instance of form_class(),
 			# so that the form will come clean.

@@ -12,9 +12,12 @@ class Post(models.Model):
     title = models.CharField(max_length = 500)
     content = models.TextField()
     files = models.ImageField(upload_to=saveimage, max_length=100,null=True,blank=True,default=None)
+    video_link = models.CharField(max_length=5000,null=True,blank=True,default='None')
     date = models.DateTimeField(default = timezone.now)
     author = models.ForeignKey(User,on_delete = models.CASCADE)
     upvotes = models.ManyToManyField(User,related_name='upvotes',null=True,blank=True)
+    classes = models.CharField(max_length=50,default='Other')
+    subject = models.CharField(max_length=50,default='Other')
     
     def filetype(self):
         if(self.files == None):
