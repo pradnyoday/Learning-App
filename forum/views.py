@@ -42,18 +42,20 @@ class PostListView(ListView,ModelFormMixin):
  
 	def get(self, request, *args, **kwargs):
 		self.object = None
-		self.form = self.get_form(self.form_class)
+		self.form =  self.form_class()
 		# Explicitly states what get to call:
 		return ListView.get(self, request, *args, **kwargs)
     
 	def post(self, request, *args, **kwargs):
 		# When the form is submitted, it will enter here
 		self.object = None
-		self.form = self.get_form(self.form_class)
-
+		self.form = self.form_class(request.POST, request.FILES)
 		if self.form.is_valid():
+			a = self.form.cleaned_data.get('files1')
 			self.form.instance.author = self.request.user
 			self.object = self.form.save()
+			self.object.files = a
+			self.object.save()
 			# Here ou may consider creating a new instance of form_class(),
 			# so that the form will come clean.
 		# Whether the form validates or not, the view will be rendered by get()
