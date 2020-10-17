@@ -1,7 +1,8 @@
 from django import forms
 from .models import Resource
 
-classes = [('1','I'),
+classes = [('Other','Other'),
+           ('1','I'),
             ('2','II'),
             ('3','III'),
             ('4','IV'),
@@ -13,10 +14,10 @@ classes = [('1','I'),
             ('10','X'),
             ('11','XI'),
             ('12','XII'),
-            ('Other','Other'),
         ]
 
-subject = [('History','History'),
+subject = [('Other','Other'),
+           ('History','History'),
             ('Civics','Civics'),
             ('Geography','Geography'),
             ('Mathematics','Mathematics'),
@@ -28,17 +29,17 @@ subject = [('History','History'),
             ('Electronics','Electronics'),
             ('Computer Science','Computer Science'),
             ('Information Technology','Information Technology'),
-            ('Other','Other'),
         ]
 
 
 class ResourceForm(forms.ModelForm):
-    classes = forms.ChoiceField(choices=classes)
-    subject = forms.ChoiceField(choices=subject)
-    title = forms.CharField(max_length=500,label='',widget=forms.TextInput(attrs={'placeholder': 'Title'}))
-    content = forms.CharField(max_length=2000,label='',widget=forms.TextInput(attrs={'placeholder': 'Whats On Your mind?'}))
+    classes = forms.ChoiceField(choices=classes,label='Class',widget=forms.Select(attrs={'class':'form-control'}))
+    subject = forms.ChoiceField(choices=subject,label='Subject',widget=forms.Select(attrs={'class':'form-control'}))
+    title = forms.CharField(max_length=500,label='',widget=forms.TextInput(attrs={'placeholder': 'Title','class':'form-control'}))
+    content = forms.CharField(max_length=2000,label='',widget=forms.Textarea(attrs={'placeholder': 'Whats On Your mind?','style':'height:100px;'}))
     files1 = forms.FileField(required=False,label='Upload a File')
+    video_link = forms.CharField(required=False,max_length=5000,label='',widget=forms.TextInput(attrs={'placeholder': 'Video Link (if any)','class':'form-control'}))
     class Meta:
         model = Resource
-        fields = ['title','content','files1','classes','subject']
+        fields = ['title','content','files1','classes','subject','video_link']
         

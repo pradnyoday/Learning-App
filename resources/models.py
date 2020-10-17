@@ -15,6 +15,7 @@ class Resource(models.Model):
     files = models.FileField(upload_to=savefile, max_length=100,null=True,blank=True,default=None)
     date = models.DateTimeField(default = timezone.now)
     author = models.ForeignKey(User,on_delete = models.CASCADE)
+    video_link = models.CharField(max_length=5000,null=True,blank=True,default='None')
     
     class Meta:
         verbose_name_plural = 'Resources'
@@ -23,11 +24,15 @@ class Resource(models.Model):
     def filetype(self):
         if(self.files == None):
             return 'None'
-        name, extension = os.path.splitext(self.files.name)
+        ext = self.files.name.split('.')
+        ext = '.'+ext[-1]
         img = {'.jpg':1,'.png':1,'.jpeg':1,}
+        print(ext)
         filetype = 'other'
-        if(extension in img):
+        if(ext in img):
             filetype = 'image'
+        elif(ext == '.pdf'):
+            filetype = 'pdf'
         print(filetype)
         return filetype
     

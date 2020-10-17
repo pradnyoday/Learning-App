@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.views.generic.edit import CreateView
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
@@ -7,7 +7,7 @@ from .forms import ResourceForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
-
+from django.views.decorators.clickjacking import xframe_options_exempt
 # Create your views here.
 
 
@@ -29,8 +29,40 @@ class ResourcesListView(ListView):
 	template_name = 'resources/resources.html'
 	context_object_name = 'resources'
 	ordering = ['-date']
-
-	
+	form_class = ResourceForm
+ 
+	def get(self, request, *args, **kwargs):
+		self.object = None
+		self.form =  self.form_class()
+		return ListView.get(self, request, *args, **kwargs)
+    
+	def post(self, request, *args, **kwargs):
+		self.object = None
+		self.form = self.form_class(request.POST, request.FILES)
+		if self.form.is_valid():
+			filename = self.form.cleaned_data.get('files1')
+			self.form.instance.author = self.request.user
+			link = self.form.cleaned_data.get('video_link')
+			if(link == ''):link = 'None'
+			classes = self.form.cleaned_data.get('classes')
+			subject = self.form.cleaned_data.get('subject')
+			ls_link = link.split('=')
+			print(ls_link,ls_link[-1])
+			self.object = self.form.save(commit=False)
+			self.object.files = filename
+			self.object.classes = classes
+			self.object.subject = subject
+			if(link == 'None'):
+				self.object.video_link = 'None'
+			else:
+				self.object.video_link = 'https://www.youtube.com/embed/'+ls_link[-1]
+			self.object.save()
+		return redirect('resources')
+    
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['form'] = self.form
+		return context
 
 class ResourcesDetailView(DetailView):
 	model = Resource
