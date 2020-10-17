@@ -1,0 +1,26 @@
+{% extends 'forum/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+    .asteriskField {
+        display: none;
+    }
+    .center {
+        margin: auto;
+        width: 100%;
+        padding: 10px;
+    }
+</style>
+	<div class="center content-section">
+		<form method="POST" enctype="multipart/form-data" >
+			{% csrf_token %}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4">Add Resources</legend>
+				{{form|crispy}}
+			</fieldset>
+			<div class="form-group">
+				<button class="btn btn-outline-info" type="submit">Post</button>
+			</div>
+		</form>
+	</div>
+{% endblock content %}
