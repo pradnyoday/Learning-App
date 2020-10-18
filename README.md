@@ -1,4 +1,11 @@
 # hackccelerate_new_year
+ ## Video Link
+ [Please refer to this YouTube link](https://youtu.be/-xZzE0P3Go0)
+
+
+ ## Demo Link
+ [Please refer to this demo link](http://learnitapp.pythonanywhere.com/)
+
 
 ## Instructions
 #### Create Virtual Environment
@@ -19,7 +26,7 @@ venv\Scripts\activate - For Windows CMD
 pip install -r requirements.txt
 ```
 
-#### Create a new database in phpmyadmin and enter the database. Then import pharmarket_portal.sql
+#### Create a new database in phpmyadmin named 'learning_app' and enter the database. Then import learning_app_final.sql.
 
 #### Make migrations inside projects folder and then run server
 
