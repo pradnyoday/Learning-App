@@ -20,11 +20,11 @@ from plotly.offline import plot
 
 from django.contrib.auth.decorators import login_required
 # Create your views here.
-def getStudentAttendance(request):
+def getStudentAttendance(request, user_id):
 	lectures_list = [23,24,23,10,0,20,25,21,23,20,23,20]
 
-	connection = pymysql.connect(host = 'localhost', user = 'root', password = '', database = 'learning_app_trial')
-	sql = 'SELECT COUNT(present) as present_count, MONTH(date) as month FROM `attendance` WHERE user_id = 1 AND present = 1 GROUP BY MONTH(date)'
+	connection = pymysql.connect(host = 'localhost', user = 'root', password = '', database = 'learning_app')
+	sql = "SELECT COUNT(present) as present_count, MONTH(date) as month FROM `forum_attendance` WHERE user_id = '{0}' AND present = 1 GROUP BY MONTH(date)".format(user_id)
 	df = pd.read_sql(sql, connection)
 	present_list = df['present_count'].tolist()
 	month_list = df['month'].tolist()
