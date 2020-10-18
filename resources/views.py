@@ -11,7 +11,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 # Create your views here.
 
 
-class UserResourcesListView(ListView):
+class UserResourcesListView(LoginRequiredMixin,ListView):
 	model = Resource
 	template_name = 'resources/user_resources.html'
 	context_object_name = 'resources'
@@ -24,7 +24,7 @@ class UserResourcesListView(ListView):
 def get_user(request):
     return request.user
 
-class ResourcesListView(ListView):
+class ResourcesListView(LoginRequiredMixin,ListView):
 	model = Resource
 	template_name = 'resources/resources.html'
 	context_object_name = 'resources'
@@ -77,23 +77,10 @@ class ResourcesCreateView(LoginRequiredMixin,CreateView):
         form.classes = cl
         return super().form_valid(form)
     
-class ResourcesUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
-	model = Resource
-	form_class  = ResourceForm
-
-	def form_valid(self,form):
-		form.instance.author = self.request.user
-		return super().form_valid(form)
-
-	def test_func(self):
-		post = self.get_object()
-		if(self.request.user == post.author):
-			return True
-		return False
 
 class ResourcesDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 	model = Resource
-	success_url = '/'
+	success_url = '/forum'
 
 	def test_func(self):
 		post = self.get_object()

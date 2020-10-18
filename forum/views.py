@@ -6,6 +6,8 @@ from django.views.generic.edit import FormMixin,ModelFormMixin
 from .models import Post,Replies,Assessment,Questions
 from users.models import Student
 from .forms import PostForm,CommentForm,AssessmentForm,QuestionForm
+from .models import Post,Replies
+from .forms import PostForm,CommentForm,SortByForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
@@ -16,6 +18,7 @@ import pymysql
 import plotly.graph_objects as go
 from plotly.offline import plot
 
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def getStudentAttendance(request):
 	lectures_list = [23,24,23,10,0,20,25,21,23,20,23,20]
@@ -108,7 +111,7 @@ def getTeacherAttendance(user_id):
 	return plot_div
 	
 
-class UserPostListView(ListView):
+class UserPostListView(LoginRequiredMixin,ListView):
 	model = Post
 	template_name = 'forum/user_posts.html'
 	context_object_name = 'posts'
@@ -128,22 +131,29 @@ class UserPostListView(ListView):
 def get_user(request):
     return request.user
 
-class PostListView(ListView,ModelFormMixin):
+class PostListView(LoginRequiredMixin,ListView,ModelFormMixin):
 	model = Post
 	template_name = 'forum/forum.html'
 	context_object_name = 'posts'
 	ordering = ['-date']
 	form_class = PostForm
-	
  
+	def get_queryset(self):
+		if(self.request.method == 'GET'):
+			search_form = SortByForm(self.request.GET)
+			if search_form.is_valid():
+				print('search_form')
+				classes = search_form.cleaned_data.get('classes')
+				print(classes)
+				queryset = Post.objects.filter(classes = classes)
+		return queryset
+    
 	def get(self, request, *args, **kwargs):
 		self.object = None
 		self.form =  self.form_class()
-		# Explicitly states what get to call:
 		return ListView.get(self, request, *args, **kwargs)
     
 	def post(self, request, *args, **kwargs):
-		# When the form is submitted, it will enter here
 		self.object = None
 		self.form = self.form_class(request.POST, request.FILES)
 		if self.form.is_valid():
@@ -164,11 +174,8 @@ class PostListView(ListView,ModelFormMixin):
 			else:
 				self.object.video_link = 'https://www.youtube.com/embed/'+ls_link[-1]
 			self.object.save()
-			# Here ou may consider creating a new instance of form_class(),
-			# so that the form will come clean.
-		# Whether the form validates or not, the view will be rendered by get()
 		return redirect('forum')
-    
+
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		liked = False
@@ -176,10 +183,15 @@ class PostListView(ListView,ModelFormMixin):
 		liked_posts = user.upvotes.filter(id__in=self.get_queryset()).values_list('id', flat=True)
 		context['liked_posts'] = liked_posts
 		context['form'] = self.form
+		get_params = self.request.GET
+		if(len(get_params) == 0):
+			context['po'] = True
+			context['post1'] = Post.objects.all().order_by('-date')
+		context['searchform'] = SortByForm(get_params)
 		return context
 	
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin,DetailView):
 	model = Post
  
 class PostCreateView(LoginRequiredMixin,CreateView):
@@ -191,19 +203,6 @@ class PostCreateView(LoginRequiredMixin,CreateView):
         
         return super().form_valid(form)
     
-class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
-	model = Post
-	form_class  = PostForm
-
-	def form_valid(self,form):
-		form.instance.author = self.request.user
-		return super().form_valid(form)
-
-	def test_func(self):
-		post = self.get_object()
-		if(self.request.user == post.author):
-			return True
-		return False
 
 class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 	model = Post
@@ -215,14 +214,19 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 			return True
 		return False
 
-def UpvoteView(request,pk):
-    post = get_object_or_404(Post,id=request.POST.get('post_id'))
-    if(post.upvotes.filter(id=request.user.id).exists()):
-        post.upvotes.remove(request.user)
-    else:
-    	post.upvotes.add(request.user)
-    return HttpResponseRedirect(reverse('forum'))
 
+def UpvoteView(request,pk):
+	print(request.user,request.user.is_authenticated)
+	if(request.user.is_authenticated):
+		post = get_object_or_404(Post,id=request.POST.get('post_id'))
+		if(post.upvotes.filter(id=request.user.id).exists()):
+			post.upvotes.remove(request.user)
+		else:
+			post.upvotes.add(request.user)
+		return HttpResponseRedirect(reverse('forum'))
+	else:return redirect('login')
+ 
+@login_required
 def CommentView(request,pk):
     if(request.method == 'POST'):
         form = CommentForm(request.POST)

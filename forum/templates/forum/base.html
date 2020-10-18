@@ -36,7 +36,7 @@
             </button>
                     <a class="navbar-brand" href="#">LearnIt</a>
                 </div>
-
+                {% if request.user.is_authenticated %}
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right main-menu">
                         <li class="dropdown">
@@ -63,6 +63,7 @@
                     </ul>
                    
                 </div>
+                {% endif %}
             </div>
         </nav>
     </header>

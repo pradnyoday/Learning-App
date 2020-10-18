@@ -16,6 +16,7 @@ classes = [('Other','Other'),
         ]
 
 subject = [('Other','Other'),
+           ('Science','Science'),
            ('History','History'),
             ('Civics','Civics'),
             ('Geography','Geography'),
@@ -46,6 +47,7 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Replies
         fields = ['content']
+<<<<<<< HEAD
 
 class AssessmentForm(forms.ModelForm):
 
@@ -58,3 +60,8 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Questions
         fields = ['question', 'option1', 'option2', 'option3', 'option4', 'answer', 'marks']
+=======
+        
+class SortByForm(forms.Form):
+    classes = forms.ChoiceField(required=False,initial='Other',choices=classes,label='Class',widget=forms.Select(attrs={'style':'width:30%;font-size=40px;'}))
+>>>>>>> origin/master
