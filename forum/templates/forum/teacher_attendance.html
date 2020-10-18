@@ -1,0 +1,22 @@
+{% extends 'forum/base.html' %}
+{% block content %}
+
+
+    <div class="col-md-3">
+        
+        <ul class="navbar-nav">
+            <li class="nav-item"><h1 style="text-align: center;">Students List</h1></li>
+            <h5 class="nav-item">Select a student to view his/her attendance</h5>
+            {% csrf_token %}
+            {% for d in data %}
+                <li class="nav-item" data-folder={{ d.user_id }}>
+                    <h4><a href="{% url 'forum-fetch-attendance' d.user_id %}">{{ d.user.first_name }} {{ d.user.last_name }}</a>
+                    </h4>
+                </li>
+            {% endfor %}
+        </ul>
+          
+    </div>
+    
+
+{% endblock %}

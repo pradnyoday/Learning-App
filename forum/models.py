@@ -58,6 +58,49 @@ class Replies(models.Model):
     class Meta:
         verbose_name_plural = 'Replies'
         db_table = 'forum_replies'
+    
+class Attendance(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,db_column = 'user_id')
+    present = models.IntegerField()
+    date = models.DateTimeField(default = timezone.now)
+
+    def  __str__(self):
+        return str(self.user)
+
+class Assessment(models.Model):
+    teacher = models.ForeignKey("users.Teacher", on_delete=models.CASCADE,db_column = 'teacher_id')
+    name = models.CharField(max_length=100, default="None")
+    standard = models.IntegerField()
+    subject = models.CharField(max_length = 100)
+    topic = models.CharField(max_length = 100)
+
+    def  __str__(self):
+        return str(self.name)
+
+class Marks(models.Model):
+    student = models.ForeignKey("users.Student", on_delete=models.CASCADE,db_column = 'student_id')
+    teacher = models.ForeignKey("users.Teacher", on_delete=models.CASCADE,db_column = 'teacher_id')
+    assessment = models.ForeignKey("forum.Assessment", on_delete=models.CASCADE,db_column = 'assessment_id')
+    marks = models.IntegerField()
+
+    def  __str__(self):
+        return str(self.student)
+
+class Questions(models.Model):
+    question = models.CharField(max_length=200)
+    option1 = models.CharField(max_length=100)
+    option2 = models.CharField(max_length=100)
+    option3 = models.CharField(max_length=100)
+    option4 = models.CharField(max_length=100)
+    answer = models.IntegerField()
+    marks = models.IntegerField()
+    assessment = models.ForeignKey("forum.Assessment", on_delete=models.CASCADE, db_column='assessment_id')
+
+    # date_posted = models.DateTimeField(default=timezone.now)
+    # author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.question
         
 
 

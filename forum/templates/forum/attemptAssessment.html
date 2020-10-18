@@ -1,0 +1,33 @@
+{% extends "forum/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        
+            <ul>
+                <h1 style="text-align: center;">Available Questions</h1>
+                <h5 class="nav-item" style="text-align: center;">Students can choose to attempt any question of their choice</h5>
+                {% csrf_token %}
+                {% for d in data %}
+                    <li class="nav-item list-group-item box list-group-item-action">
+                        <h3>{{ d.id }}. {{ d.question }}</h3>
+                    </li>
+                    <li class="nav-item list-group-item box list-group-item-action">
+                        <h4>1. {{ d.option1 }}</h4>
+                    </li>
+                    <li class="nav-item list-group-item box list-group-item-action">
+                        <h4>2. {{ d.option2 }}</h4>
+                    </li>
+                    <li class="nav-item list-group-item box list-group-item-action">
+                        <h4>3. {{ d.option3 }}</h4>
+                    </li>
+                    <li class="nav-item list-group-item box list-group-item-action">
+                        <h4>4. {{ d.option4 }}</h4>
+                    </li>
+                    <br><br>
+                {% endfor %}
+            </ul>
+        
+    </div>
+</div> 
+
+{% endblock content %}
