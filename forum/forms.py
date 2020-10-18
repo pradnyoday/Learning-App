@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post,Replies
+from .models import Post,Replies,Assessment,Questions
 classes = [('Other','Other'),
            ('1','I'),
             ('2','II'),
@@ -46,3 +46,15 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Replies
         fields = ['content']
+
+class AssessmentForm(forms.ModelForm):
+
+    class Meta:
+        model = Assessment
+        fields = ['name', 'standard', 'subject', 'topic']
+
+class QuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = Questions
+        fields = ['question', 'option1', 'option2', 'option3', 'option4', 'answer', 'marks']

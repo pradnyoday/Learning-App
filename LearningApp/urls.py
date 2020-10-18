@@ -31,6 +31,7 @@ urlpatterns = [
     path('forum/',forum_views.PostListView.as_view(),name='forum'),
     path('resources/',resources_views.ResourcesListView.as_view(),name='resources'),
     path('register/',user_views.register,name='register'),
+    path('profile/',user_views.profile,name='profile'),
     path('login/',auth_views.LoginView.as_view(template_name = 'users/login.html',redirect_authenticated_user=True),name='login'),
     path('logout/',auth_views.LogoutView.as_view(template_name = 'users/logout.html'),name='logout'),
 ]
