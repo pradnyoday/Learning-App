@@ -1,4 +1,7 @@
-# hackccelerate_new_year
+# Hackccelerate Hackathon | Team New_Year
+
+### This is the repository for Hackccelerate Hackathon for problem statement 'Learning App' by team New_Year
+
  ## Video Link
  [Please refer to this YouTube link](https://youtu.be/-xZzE0P3Go0)
 
