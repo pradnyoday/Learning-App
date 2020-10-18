@@ -7,8 +7,8 @@
   user-select: none;
 }
 .center {
+	display: block;
         margin: auto;
-        width: 80%;
         padding: 10px;
     }
 .fa:hover {
@@ -28,6 +28,12 @@
 				<embed src="{{post.files.url}}" type="image/jpg" class="center img-responsive post-image"  width="600px" height="500px"></embed>
 			</div>
 		{% endif %}
+		{% if post.video_link != 'None' %}
+				<div style="margin: 10px;">
+					<iframe class = "center" width="420" height="315"  src="{{post.video_link}}">
+					</iframe>
+				</div>
+			{% endif %}
 		<div class="post-container">
 			
 			<img src="{{ post.author.profile.image.url }}" alt="user" class="profile-photo-md pull-left"/>
