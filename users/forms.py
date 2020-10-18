@@ -21,7 +21,7 @@ class UserRegisterForm(UserCreationForm):
 	username = forms.CharField(max_length=50, label='',widget=forms.TextInput(attrs={'placeholder': 'Username'}))
 	email = forms.EmailField(label='',widget=forms.TextInput(attrs={'placeholder': 'Email'}))
 	role = forms.ChoiceField(choices=roles)
-	first_name = forms.CharField(max_length=50,label='',widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
+	first_name = forms.CharField(required= True,max_length=50,label='',widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
 	last_name = forms.CharField(max_length=50,label='',widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
 	password1 = forms.CharField(max_length=100,label='',widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 	password2 = forms.CharField(max_length=100,label='',widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'}))
@@ -50,9 +50,10 @@ class StudentForm(forms.ModelForm):
 	class Meta:
 		model = Student
 		fields = ('rollno','standard')
-  
+
+
 class ParentForm(forms.ModelForm):
-	child = forms.CharField( max_length=100, )
+	child = forms.ChoiceField(choices=[(i.user.first_name,i.user.first_name) for i in Student.objects.all()], required=False)
 	class Meta:
 		model = Parent
 		fields = ('child',)
