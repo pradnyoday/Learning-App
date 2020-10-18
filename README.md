@@ -2,6 +2,8 @@
 
 ### This is the repository for Hackccelerate Hackathon for problem statement 'Learning App' by team New_Year
 
+#### The project provides a unique way for students to gain knowledge by interacting with their fellow students. The students can interact with other students' posts, help students in solving any problems or ask questions. Teachers can monitor the forum and can answer students' questions and can even create knowledge sharing posts. Parents can monitor the child's progress by viewing attendance, marks and other student's activities. To sum it all up, the project provides a common ground for students, teachers and parents to coherently make equal contributions in the progress of the student. 
+
  ## Video Link
  [Please refer to this YouTube link](https://youtu.be/-xZzE0P3Go0)
 
@@ -40,6 +42,4 @@ python manage.py runserver
 ```
 
 
-## Features
 
-#### The project provides a unique way for students to gain knowledge by interacting with their fellow students. The students can interact with other students' posts, help students in solving any problems or ask questions. Teachers can monitor the forum and can answer students' questions and can even create knowledge sharing posts. Parents can monitor the child's progress by viewing attendance, marks and other student's activities. To sum it all up, the project provides a common ground for students, teachers and parents to coherently make equal contributions in the progress of the student. 
