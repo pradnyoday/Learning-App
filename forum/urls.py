@@ -1,9 +1,5 @@
 from django.urls import path
-<<<<<<< HEAD
 from .views import dispque,addAssessment,addQuestion,getStudentAttendance,getStudentList,fetchAttendance,PostCreateView,PostUpdateView,PostDeleteView,UserPostListView,PostListView,PostDetailView,UpvoteView,CommentView
-=======
-from .views import PostCreateView,PostDeleteView,UserPostListView,PostListView,PostDetailView,UpvoteView,CommentView
->>>>>>> origin/master
 
 urlpatterns = [
     path('',PostListView.as_view(), name='forum'),
