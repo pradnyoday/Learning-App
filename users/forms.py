@@ -20,7 +20,7 @@ roles = [(0,'Student'),(1,'Parent'),(2,'Teacher')]
 class UserRegisterForm(UserCreationForm):
 	username = forms.CharField(max_length=50, label='',widget=forms.TextInput(attrs={'placeholder': 'Username'}))
 	email = forms.EmailField(label='',widget=forms.TextInput(attrs={'placeholder': 'Email'}))
-	role = forms.ChoiceField(choices=roles)
+	
 	first_name = forms.CharField(required= True,max_length=50,label='',widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
 	last_name = forms.CharField(max_length=50,label='',widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
 	password1 = forms.CharField(max_length=100,label='',widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
@@ -40,10 +40,17 @@ class UserUpdateForm(forms.ModelForm):
 		fields = ['username','email','first_name','last_name','password1','password2']
 
 class ProfileUpdateForm(forms.ModelForm):
+	role = forms.ChoiceField(choices=roles)
 	class Meta:
 		model = Profile
 		fields = ['image']
-  
+
+class NewProfileUpdateForm(forms.ModelForm):
+	role = forms.ChoiceField(choices=roles)
+	class Meta:
+		model = Profile
+		fields = ['image','role']
+
 class StudentForm(forms.ModelForm):
 	rollno = forms.IntegerField()
 	standard = forms.ChoiceField(choices=classes, required=False)
@@ -53,10 +60,16 @@ class StudentForm(forms.ModelForm):
 
 
 class ParentForm(forms.ModelForm):
-	child = forms.ChoiceField(choices=[(i.user.first_name,i.user.first_name) for i in Student.objects.all()], required=False)
+	child = forms.ModelChoiceField(queryset=Student.objects.all())
+	contact_info = forms.CharField(max_length=20)
+	address = forms.CharField(max_length=200)
+	city = forms.CharField(max_length=100)
+	state = forms.CharField(max_length=100)
+	country = forms.CharField(max_length=100)
+    
 	class Meta:
 		model = Parent
-		fields = ('child',)
+		fields = ['child','contact_info','address', 'city', 'state', 'country']
 
 classes = [('1','I'),
             ('2','II'),

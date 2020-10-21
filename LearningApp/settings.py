@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'forum',
     'users',
     'resources',
+    'bookappointment'
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'forum.context_processors.appointmentcount',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -82,7 +84,7 @@ WSGI_APPLICATION = 'LearningApp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'learning_app',
+        'NAME': 'learning_app_final',
         'HOST': 'localhost',
         'USER' : 'root',
         'PASSWORD' : '',
@@ -141,3 +143,6 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL='/login'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}

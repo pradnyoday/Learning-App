@@ -1,0 +1,22 @@
+{% extends 'forum/base.html' %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    
+<script>
+    $('#id_datetime').datetimepicker({ footer: true, modal: true });
+</script>
+    <div class="container">
+        {% if count == 0 %}
+            <h1>No pending appointment requests</h1>
+        {% endif %}
+        {% for appointment in appointments %}
+            <h1>{{appointment.parent.user.first_name}} {{appointment.parent.user.last_name}}</h1>
+            <h3>{{appointment.parent.child.user.first_name}}</h3>
+            <h3>{{appointment.issue}}</h3>
+            <h3>On {{appointment.date|date:'Y-m-d H:i'}}</h3>
+            <a href="{% url 'updatestatus' appointment.pk 1 %}" type="submit">Approve</a>
+            <a href="{% url 'updatestatus' appointment.pk 1 %}" type="submit">Deny</a>
+        {% endfor %}
+    </div>
+{% endblock content %}

@@ -1,23 +1,46 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .forms import UserRegisterForm,UserUpdateForm,ProfileUpdateForm,StudentForm,ParentForm,TeacherForm
+from .forms import UserRegisterForm,UserUpdateForm,ProfileUpdateForm,StudentForm,ParentForm,TeacherForm,NewProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login
+from .models import Profile
+
 def register(request):
     if(request.method == 'POST'):
         form = UserRegisterForm(request.POST)
         if(form.is_valid()):
-            obj = form.save()
+            obj = form.save(commit=False)
             username = form.cleaned_data.get('username')
-            role = form.cleaned_data.get('role')
             user = obj.id
-            context = {'role':role,'user':user}
-            request.session['context'] = context
-            return redirect('setvals')
+            obj.save()
+            new_user = authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'],
+                                    )
+            login(request, new_user)
+            profile,created = Profile.objects.get_or_create(user=request.user)
+            profile.save()
+            return redirect('newprofile')
             
     else:
         form = UserRegisterForm()
     return render(request,'users/register.html',{'form':form})
+
+@login_required
+def newprofile(request):
+    if(request.method == 'POST'):
+        p_form = NewProfileUpdateForm(request.POST,
+                                    request.FILES,
+                                    instance=request.user.profile)
+        if(p_form.is_valid()):
+            p_form.save()
+            messages.success(request, f'Profile Updated Successfully!!')
+            return redirect('setvals')
+
+    else:
+        p_form = NewProfileUpdateForm(instance=request.user.profile)
+    context = {'p_form' : p_form}
+    return render(request,'users/newprofile.html',context)
 
 @login_required
 def profile(request):
@@ -42,21 +65,23 @@ def profile(request):
     return render(request,'users/profile.html',context)
 
 def setformvalues(request):
-    context = request.session['context']
-    role = context['role']
-    user = context['user']
-    print(role,user)
+    role = request.user.profile.role
+    user = request.user
     if(request.method == 'POST'):
-        if(role == '0'):
+        if(role == 0):
+            print('in studnt form')
             form = StudentForm(request.POST)
-        elif(role == '1'):
+        elif(role == 1):
             form = ParentForm(request.POST)
         else:
             form = TeacherForm(request.POST)
         if(form.is_valid()):
+            if(role == 1):
+                child = form.cleaned_data.get('child')
+                print(child)
             obj = form.save(commit=False)
-            obj.user_id = int(user)
-            if(role == '2'):
+            obj.user_id = user.id
+            if(role == 2):
                 s = form.cleaned_data.get('classes')
                 print(s)
                 if('1' in s):obj.is_class1 = 1
@@ -86,9 +111,9 @@ def setformvalues(request):
             obj.save()
             return redirect('login')
     else:
-        if(role == '0'):
+        if(role == 0):
             form = StudentForm()
-        elif(role == '1'):
+        elif(role == 1):
             form = ParentForm()
         else:
             form = TeacherForm()

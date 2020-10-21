@@ -144,7 +144,6 @@ class PostListView(LoginRequiredMixin,ListView,ModelFormMixin):
 			if search_form.is_valid():
 				print('search_form')
 				classes = search_form.cleaned_data.get('classes')
-				print(classes)
 				queryset = Post.objects.filter(classes = classes)
 		return queryset
     
@@ -164,7 +163,6 @@ class PostListView(LoginRequiredMixin,ListView,ModelFormMixin):
 			classes = self.form.cleaned_data.get('classes')
 			subject = self.form.cleaned_data.get('subject')
 			ls_link = link.split('=')
-			print(ls_link,ls_link[-1])
 			self.object = self.form.save(commit=False)
 			self.object.files = filename
 			self.object.classes = classes
@@ -180,13 +178,17 @@ class PostListView(LoginRequiredMixin,ListView,ModelFormMixin):
 		context = super().get_context_data(**kwargs)
 		liked = False
 		user = get_user(self.request)
-		liked_posts = user.upvotes.filter(id__in=self.get_queryset()).values_list('id', flat=True)
+		posts_like = self.get_queryset()
+		liked_posts = user.upvotes.filter(id__in=posts_like).values_list('id', flat=True)
 		context['liked_posts'] = liked_posts
 		context['form'] = self.form
 		get_params = self.request.GET
 		if(len(get_params) == 0):
 			context['po'] = True
-			context['post1'] = Post.objects.all().order_by('-date')
+			posts_like = Post.objects.all().order_by('-date')
+			context['post1'] = posts_like
+			liked_posts = user.upvotes.filter(id__in=posts_like).values_list('id', flat=True)
+			context['liked_posts'] = liked_posts
 		context['searchform'] = SortByForm(get_params)
 		return context
 	
@@ -206,7 +208,7 @@ class PostCreateView(LoginRequiredMixin,CreateView):
 
 class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 	model = Post
-	success_url = '/forum'
+	success_url = '/'
 
 	def test_func(self):
 		post = self.get_object()
